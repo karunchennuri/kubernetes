@@ -91,14 +91,15 @@ So it's important to verify whether they are safe assumptions or not.
 ### APPROACH 1
 In approach 1 we have a separate identity store at the FCP level. 
 
-![Federation Security Architecture](FCP_authn_authz_flow.png)
+![FCP security flow](FCP_Design_1.png =250x250)
+
 
 +	Replicate RBAC of Kubernetes at Ubernetes level but with identity store at federation level.
 +	Federation-apiserver shall run with –authorization-mode=”RBAC”
 +	Controller manager get’s a modified yaml file with annotations containing weight of only those clusters that user has access to. 
 +	Controller manager may use common credentials for performing cluster level operations or use impersonation mechanism for performing cluster level operations.
 
-![FCP security flow](FCP_Design_1.png)
+![Federation Security Architecture](FCP_authn_authz_flow.png =250x250)
 
 <table style="border:1px solid #000000;border-collapse:collapse;">
 <tbody>
@@ -175,17 +176,17 @@ Spec:
 
 <br>
 </td>
-<td style="padding:5px;">Metadata:
-  Annotations:
-    Federation.kubernetes.io/replica-set-preferences 
-    {
-       “rebalance”: false,
-       “clusters”: {
-        <b>“c2”: {weight:1}</b>
-      }
-   }
-Spec:
-   Replicas: 4
+<td style="padding:5px;">metadata:<br>
+  annotations:<br>
+    federation.kubernetes.io/replica-set-preferences <br>
+    {<br>
+       “rebalance”: false,<br>
+       “clusters”: {<br>
+        <b>“c2”: {weight:1}</b><br>
+      }<br>
+   }<br>
+spec:<br>
+   replicas: 4<br>
 
 <br>
 </td>
@@ -198,36 +199,36 @@ Spec:
 </td>
 <td style="padding:5px;">C1, C2, C3<br>
 </td>
-<td style="padding:5px;">Metadata:
-  Annotations:
-    Federation.kubernetes.io/replica-set-preferences 
-    {
-       “rebalance”: false,
-       “clusters”: {
-       <b> “c1”: {weight:1},
-        “c2”: {weight:1},
-        “c3”: { weight:1}</b>
-      }
-   }
-Spec:
-   Replicas: 4
+<td style="padding:5px;">metadata:<br>
+  annotations:<br>
+    federation.kubernetes.io/replica-set-preferences <br>
+    {<br>
+       “rebalance”: false,<br>
+       “clusters”: {<br>
+       <b> “c1”: {weight:1},<br>
+        “c2”: {weight:1},<br>
+        “c3”: { weight:1}</b><br>
+      }<br>
+   }<br>
+spec:<br>
+   replicas: 4<br>
 
 
 <br>
 </td>
-<td style="padding:5px;">Metadata:
-  Annotations:
-    Federation.kubernetes.io/replica-set-preferences 
-    {
-       “rebalance”: false,
-       “clusters”: {
-       <b> “c1”: {weight:1},
-        “c2”: {weight:1},
-        “c3”: { weight:1}</b>
-      }
+<td style="padding:5px;">metadata:<br>
+  annotations:<br>
+    federation.kubernetes.io/replica-set-preferences <br>
+    {<br>
+       “rebalance”: false,<br>
+       “clusters”: {<br>
+       <b> “c1”: {weight:1},<br>
+        “c2”: {weight:1},<br>
+        “c3”: { weight:1}</b><br>
+      }<br>
    }
-Spec:
-   Replicas: 4
+spec:<br>
+   replicas: 4<br>
 
 <br>
 </td>
@@ -242,23 +243,22 @@ Spec:
 Keystone 2 Keystone federation
 
 
-![Federation Security Architecture with Keystone](FCP_Design_2.png)
+![Federation Security Architecture with Keystone](FCP_Design_2.png =250x250)
 
 ++	Authentication Flow:
 +	Users of FCP, each k8s cluster to be stored in Keystone (IdP side)
-+	FCP shall have same level of code changes as done for k8s cluster of PaaSv2.
-+	User or client application to talk to FCP same as any client talking to paasv2 k8s cluster.
++	User or client application to talk to FCP same as any client talking to k8s cluster.
 		+	Client uses username password to talk to FCP
 		+	FCP authenticates against Keystone (SP), which in turn federates the authentication to underlying k8s cluster level Keystone (IdP)
 		+	Keystone (SP) may or may not have identities stored. 
 		+	Keystone should run alongside Apache Shibboleth, which has all the IdPs configured.
 
 ++	Authorization Flow:
-+	The design will be same as what has been adapted for PaaSv2 Kubernetes Authorization. 
++	The design will be same as what has been adapted for Kubernetes Authorization. 
 +	Kubernetes Authorization steps:
 	+	4 roles of RBAC in cluster – Role, RoleBinding, Cluster, ClusterRoleBinding – are out-of-box from Kubernetes.
 	+	RBAC Role-Rules are applied at the cluster level during boot strapping phase.
-	+	In Keystone create same set of 4 roles and users of PaaSv2 Kubernetes are grouped into these roles.
+	+	In Keystone create same set of 4 roles and users of Kubernetes are grouped into these roles.
 	+	User is first authenticated at the apiserver level. Api server talks to Keystone with username and password, up on successful authentication Keystone returns a scoped token, which contains role information. Role here would be atleast one role of the 4 roles defined above.
 +	Ubernetes Authorization steps:
 	+	Create same set of roles but role-rule to be applied at the ubernetes level during boot strapping phase.
