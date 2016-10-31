@@ -91,7 +91,7 @@ So it's important to verify whether they are safe assumptions or not.
 ### APPROACH 1
 In approach 1 we have a separate identity store at the FCP level. 
 
-![FCP security flow](FCP_Design_1.png =250x250)
+![FCP security flow](FCP_Design_1.png)
 
 
 +	Replicate RBAC of Kubernetes at Ubernetes level but with identity store at federation level.
@@ -99,7 +99,7 @@ In approach 1 we have a separate identity store at the FCP level.
 +	Controller manager get’s a modified yaml file with annotations containing weight of only those clusters that user has access to. 
 +	Controller manager may use common credentials for performing cluster level operations or use impersonation mechanism for performing cluster level operations.
 
-![Federation Security Architecture](FCP_authn_authz_flow.png =250x250)
+![Federation Security Architecture](FCP_authn_authz_flow.png)
 
 <table style="border:1px solid #000000;border-collapse:collapse;">
 <tbody>
@@ -122,33 +122,33 @@ In approach 1 we have a separate identity store at the FCP level.
 </td>
 <td style="padding:5px;">C1, C3<br>
 </td>
-<td style="padding:5px;">Metadata:
-  Annotations:
-    Federation.kubernetes.io/replica-set-preferences 
-    {
-       “rebalance”: false,
-       “clusters”: {
-       <b> “c1”: {weight:1},
-        “c2”: {weight:1},
-        “c3”: { weight:1}</b>
-      }
-   }
-Spec:
-   Replicas: 4
+<td style="padding:5px;">metadata:<br>
+  annotations:<br>
+    federation.kubernetes.io/replica-set-preferences <br>
+    {<br>
+       “rebalance”: false,<br>
+       “clusters”: {<br>
+       <b> “c1”: {weight:1},<br>
+        “c2”: {weight:1},<br>
+        “c3”: { weight:1}</b><br>
+      }<br>
+   }<br>
+spec:<br>
+   replicas: 4<br>
 <br>
 </td>
-<td style="padding:5px;">Metadata:
-  Annotations:
-    Federation.kubernetes.io/replica-set-preferences 
-    {
-       “rebalance”: false,
-       “clusters”: {
-       <b> “c1”: {weight:1},
-        “c3”: { weight:1} </b>
+<td style="padding:5px;">metadata:<br>
+  annotations:<br>
+    federation.kubernetes.io/replica-set-preferences <br>
+    {<br>
+       “rebalance”: false,<br>
+       “clusters”: {<br>
+       <b> “c1”: {weight:1},<br>
+        “c3”: { weight:1} </b><br>
       }
    }
-Spec:
-   Replicas: 4
+spec:<br>
+   replicas: 4<br>
 <br>
 </td>
 </tr>
@@ -160,19 +160,19 @@ Spec:
 </td>
 <td style="padding:5px;">C2<br>
 </td>
-<td style="padding:5px;">Metadata:
-  Annotations:
-    Federation.kubernetes.io/replica-set-preferences 
-    {
-       “rebalance”: false,
-       “clusters”: {
-        <b>“c1”: {weight:1},
-        “c2”: {weight:1},
-        “c3”: { weight:1}</b>
-      }
-   }
-Spec:
-   Replicas: 4
+<td style="padding:5px;">metadata:<br>
+  annotations:<br>
+    federation.kubernetes.io/replica-set-preferences <br>
+    {<br>
+       “rebalance”: false,<br>
+       “clusters”: {<br>
+        <b>“c1”: {weight:1},<br>
+        “c2”: {weight:1},<br>
+        “c3”: { weight:1}</b><br>
+      }<br>
+   }<br>
+spec:<br>
+   replicas: 4<br>
 
 <br>
 </td>
@@ -243,7 +243,7 @@ spec:<br>
 Keystone 2 Keystone federation
 
 
-![Federation Security Architecture with Keystone](FCP_Design_2.png =250x250)
+![Federation Security Architecture with Keystone](FCP_Design_2.png)
 
 ++	Authentication Flow:
 +	Users of FCP, each k8s cluster to be stored in Keystone (IdP side)
